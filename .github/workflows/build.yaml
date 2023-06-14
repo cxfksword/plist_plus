@@ -20,11 +20,6 @@ jobs:
             bin: netmuxd.exe
             name: netmuxd-Windows-x86_64.zip
     steps:
-      - name: Set git to use LF
-        run: |
-          git config --global core.autocrlf false
-          git config --global core.eol lf
-      - uses: actions/checkout@v3
       - uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
@@ -36,6 +31,11 @@ jobs:
             libtool
             autoconf
             automake-wrapper
+      - name: Set git to use LF
+        run: |
+          git config --global core.autocrlf false
+          git config --global core.eol lf
+      - uses: actions/checkout@v3
       # - name: setup rust toolchain
       #   run: |
       #     echo $PATH
