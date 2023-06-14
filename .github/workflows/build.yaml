@@ -18,18 +18,11 @@ jobs:
             name: netmuxd-Windows-x86_64.zip
     steps:
       - name: Update PATH
-        run: |
-          where cargo
-          echo $PATH
-          cargo -v
-          (Resolve-Path c:/msys64/ucrt64/bin).Path >> $Env:GITHUB_PATH
-      - name: Update PATH
         shell: bash
         run: |
-          echo $0
-          echo $PATH
           cargo -v
           ls /c/Users/runneradmin/.cargo/bin
+          sh -c 'echo $PATH'
       - uses: actions/checkout@v3
       # - uses: msys2/setup-msys2@v2
       #   with:
