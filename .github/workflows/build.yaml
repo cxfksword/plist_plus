@@ -7,9 +7,6 @@ jobs:
   windows:
     name: ${{ matrix.platform.os_name }} with rust ${{ matrix.toolchain }}
     runs-on: ${{ matrix.platform.os }}
-    defaults:
-      run:
-        shell: msys2 {0}
     strategy:
       fail-fast: false
       matrix:
@@ -31,7 +28,6 @@ jobs:
           cargo -v
       - uses: actions/checkout@v3
       - uses: msys2/setup-msys2@v2
-        shell: msys2 {0}
         with:
           msystem: UCRT64
           update: true
