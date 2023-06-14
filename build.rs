@@ -106,6 +106,22 @@ fn repo_setup(url: &str) {
     cmd.status().expect("failed to git clone");
     env::set_current_dir(url.split('/').last().unwrap().replace(".git", "")).unwrap();
     env::set_var("NOCONFIGURE", "1");
+    println!(
+        "{:?}",
+        std::process::Command::new("sh")
+            .arg("-c")
+            .arg("echo $0")
+            .output()
+            .unwrap()
+    );
+    println!(
+        "{:?}",
+        std::process::Command::new("sh")
+            .arg("-c")
+            .arg("echo $PATH")
+            .output()
+            .unwrap()
+    );
     let status = std::process::Command::new("sh")
         .arg("-c")
         .arg("./autogen.sh")
