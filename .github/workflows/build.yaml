@@ -31,6 +31,8 @@ jobs:
             libtool
             autoconf
             automake-wrapper
+            pkg-config
+            cython
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
