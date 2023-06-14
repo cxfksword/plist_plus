@@ -106,11 +106,11 @@ fn repo_setup(url: &str) {
     cmd.output().unwrap();
     env::set_current_dir(url.split('/').last().unwrap().replace(".git", "")).unwrap();
     env::set_var("NOCONFIGURE", "1");
-    std::process::Command::new("sh")
+    let out = std::process::Command::new("sh")
         .arg("-c")
         .arg("./autogen.sh")
-        .output()
-        .unwrap();
+        .output();
+    println!("{:?}", out);
     env::remove_var("NOCONFIGURE");
     env::set_current_dir("..").unwrap();
 }

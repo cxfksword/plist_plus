@@ -38,4 +38,4 @@ jobs:
       - name: Build binary
         shell: bash
         run: |
-          cargo build --release --target ${{ matrix.platform.target }} --features vendored -vv
+          cargo build --release --target x86_64-pc-windows-gnu --features vendored -vv
