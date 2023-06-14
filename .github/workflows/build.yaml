@@ -20,7 +20,18 @@ jobs:
             bin: netmuxd.exe
             name: netmuxd-Windows-x86_64.zip
     steps:
+      - name: Update PATH
+        run: |
+          where cargo
+          echo $PATH
+          (Resolve-Path c:/msys64/ucrt64/bin).Path >> $Env:GITHUB_PATH
+      - name: Build binary
+        shell: msys2 {0}
+        run: |
+          cargo -v
+      - uses: actions/checkout@v3
       - uses: msys2/setup-msys2@v2
+        shell: msys2 {0}
         with:
           msystem: UCRT64
           update: true
@@ -31,8 +42,7 @@ jobs:
             libtool
             autoconf
             automake-wrapper
-            mingw-w64-x86_64-rust
-      - uses: actions/checkout@v3
       - name: Build binary
+        shell: msys2 {0}
         run: |
           cargo build --release --target ${{ matrix.platform.target }} --features vendored
