@@ -30,9 +30,9 @@ jobs:
             mingw-w64-ucrt-x86_64-gcc
             libtool
             autoconf
+            automake
             automake-wrapper
             pkg-config
-            make
       - name: Set git to use LF
         run: |
           git config --global core.autocrlf false
