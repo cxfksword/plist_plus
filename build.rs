@@ -103,14 +103,14 @@ fn repo_setup(url: &str) {
     let mut cmd = std::process::Command::new("git");
     cmd.arg("clone");
     cmd.arg(url);
-    cmd.output().unwrap();
+    cmd.status().expect("failed to git clone");
     env::set_current_dir(url.split('/').last().unwrap().replace(".git", "")).unwrap();
     env::set_var("NOCONFIGURE", "1");
-    let out = std::process::Command::new("sh")
+    std::process::Command::new("bash")
         .arg("-c")
         .arg("./autogen.sh")
-        .output();
-    println!("{:?}", out);
+        .status()
+        .expect("failed to run autogen.sh");
     env::remove_var("NOCONFIGURE");
     env::set_current_dir("..").unwrap();
 }
