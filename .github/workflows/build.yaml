@@ -1,0 +1,39 @@
+name: build
+
+on:
+  push:
+
+jobs:
+  windows:
+    name: ${{ matrix.platform.os_name }} with rust ${{ matrix.toolchain }}
+    runs-on: ${{ matrix.platform.os }}
+    defaults:
+      run:
+        shell: msys2 {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - os_name: Windows-x86_64
+            os: windows-latest
+            target: x86_64-pc-windows-gnu
+            bin: netmuxd.exe
+            name: netmuxd-Windows-x86_64.zip
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: >-
+            base-devel
+            git
+            mingw-w64-ucrt-x86_64-gcc
+            libtool
+            autoconf
+            automake-wrapper
+      - uses: actions/checkout@v3
+      - name: Build binary
+        uses: houseabsolute/actions-rust-cross@v0
+        with:
+          command: "build"
+          target: ${{ matrix.platform.target }}
+          args: "--release --features vendored"

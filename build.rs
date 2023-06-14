@@ -52,17 +52,34 @@ fn main() {
         // Clone the vendored libraries
         repo_setup("https://github.com/libimobiledevice/libplist.git");
 
-        // Build those bad bois
-        let dst = autotools::Config::new("libplist")
-            .without("cython", None)
-            .build();
+        let target_os = std::env::var("CARGO_CFG_TARGET_OS").unwrap();
+        if target_os == "windows" {
+            // Build those bad bois
+            let dst = autotools::Config::new("libplist")
+                .enable_shared()
+                .disable_static()
+                .without("cython", None)
+                .build();
 
-        println!(
-            "cargo:rustc-link-search=native={}",
-            dst.join("lib").display()
-        );
+            println!(
+                "cargo:rustc-link-search=native={}",
+                dst.join("lib").display()
+            );
 
-        println!("cargo:rustc-link-lib=static=plist-2.0");
+            println!("cargo:rustc-link-lib=plist-2.0");
+        } else {
+            // Build those bad bois
+            let dst = autotools::Config::new("libplist")
+                .without("cython", None)
+                .build();
+
+            println!(
+                "cargo:rustc-link-search=native={}",
+                dst.join("lib").display()
+            );
+
+            println!("cargo:rustc-link-lib=static=plist-2.0");
+        }
     } else {
         // Check if folder ./override exists
         let override_path = PathBuf::from("./override").join(env::var("TARGET").unwrap());
@@ -89,8 +106,11 @@ fn repo_setup(url: &str) {
     cmd.output().unwrap();
     env::set_current_dir(url.split('/').last().unwrap().replace(".git", "")).unwrap();
     env::set_var("NOCONFIGURE", "1");
-    let mut cmd = std::process::Command::new("./autogen.sh");
-    let _ = cmd.output();
+    std::process::Command::new("sh")
+        .arg("-c")
+        .arg("./autogen.sh")
+        .output()
+        .unwrap();
     env::remove_var("NOCONFIGURE");
     env::set_current_dir("..").unwrap();
 }
