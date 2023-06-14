@@ -28,23 +28,21 @@ jobs:
         run: |
           echo $0
           echo $PATH
-      - uses: actions/checkout@v3
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          update: true
-          install: >-
-            base-devel
-            git
-            mingw-w64-ucrt-x86_64-gcc
-            libtool
-            autoconf
-            automake-wrapper
-      - name: Build binary
-        shell: msys2 {0}
-        run: |
           cargo -v
+          ls /c/Users/runneradmin/.cargo/bin
+      - uses: actions/checkout@v3
+      # - uses: msys2/setup-msys2@v2
+      #   with:
+      #     msystem: UCRT64
+      #     update: true
+      #     install: >-
+      #       base-devel
+      #       git
+      #       mingw-w64-ucrt-x86_64-gcc
+      #       libtool
+      #       autoconf
+      #       automake-wrapper
       - name: Build binary
-        shell: msys2 {0}
+        shell: bash
         run: |
           cargo build --release --target ${{ matrix.platform.target }} --features vendored
