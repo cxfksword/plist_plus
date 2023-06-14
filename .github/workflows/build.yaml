@@ -9,7 +9,7 @@ jobs:
     runs-on: ${{ matrix.platform.os }}
     defaults:
       run:
-        shell: msys2 {0}
+        shell: bash
     strategy:
       fail-fast: false
       matrix:
@@ -20,20 +20,9 @@ jobs:
             bin: netmuxd.exe
             name: netmuxd-Windows-x86_64.zip
     steps:
-      - uses: msys2/setup-msys2@v2
-        with:
-          msystem: UCRT64
-          install: >-
-            base-devel
-            git
-            mingw-w64-ucrt-x86_64-gcc
-            libtool
-            autoconf
-            automake-wrapper
+      - run: |
+          pacman -S base-devel git mingw-w64-ucrt-x86_64-gcc libtool autoconf automake-wrapper
       - uses: actions/checkout@v3
       - name: Build binary
-        uses: houseabsolute/actions-rust-cross@v0
-        with:
-          command: "build"
-          target: ${{ matrix.platform.target }}
-          args: "--release --features vendored"
+        run: |
+          cargo build --release --target ${{ matrix.platform.target }} --features vendored
