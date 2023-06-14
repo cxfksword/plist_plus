@@ -111,7 +111,7 @@ fn repo_setup(url: &str) {
     }
     println!(
         "{:?}",
-        std::process::Command::new("sh")
+        std::process::Command::new("bash")
             .arg("-c")
             .arg("echo $0")
             .output()
@@ -125,7 +125,7 @@ fn repo_setup(url: &str) {
             .output()
             .unwrap()
     );
-    let status = std::process::Command::new("bash")
+    let status = std::process::Command::new("sh")
         .arg("-c")
         .arg("./autogen.sh")
         .status()
