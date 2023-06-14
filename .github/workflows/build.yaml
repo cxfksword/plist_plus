@@ -7,6 +7,9 @@ jobs:
   windows:
     name: ${{ matrix.platform.os_name }} with rust ${{ matrix.toolchain }}
     runs-on: ${{ matrix.platform.os }}
+    defaults:
+      run:
+        shell: msys2 {0}
     strategy:
       fail-fast: false
       matrix:
@@ -17,25 +20,22 @@ jobs:
             bin: netmuxd.exe
             name: netmuxd-Windows-x86_64.zip
     steps:
-      - name: Update PATH
-        shell: bash
-        run: |
-          cargo -v
-          ls /c/Users/runneradmin/.cargo/bin
-          sh -c 'echo $PATH'
       - uses: actions/checkout@v3
-      # - uses: msys2/setup-msys2@v2
-      #   with:
-      #     msystem: UCRT64
-      #     update: true
-      #     install: >-
-      #       base-devel
-      #       git
-      #       mingw-w64-ucrt-x86_64-gcc
-      #       libtool
-      #       autoconf
-      #       automake-wrapper
-      - name: Build binary
-        shell: bash
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          # path-type: inherit
+          install: >-
+            base-devel
+            git
+            mingw-w64-ucrt-x86_64-gcc
+            libtool
+            autoconf
+            automake-wrapper
+      - name: setup rust toolchain
         run: |
-          cargo build --release --target x86_64-pc-windows-gnu --features vendored -vv
+          echo $PATH
+          export PATH=/c/Users/runneradmin/.cargo/bin:$PATH
+      - name: Build binary
+        run: |
+          cargo build --release --target ${{ matrix.platform.target }} --features vendored
