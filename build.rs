@@ -106,6 +106,9 @@ fn repo_setup(url: &str) {
     cmd.status().expect("failed to git clone");
     env::set_current_dir(url.split('/').last().unwrap().replace(".git", "")).unwrap();
     env::set_var("NOCONFIGURE", "1");
+    for (key, val) in env::vars() {
+        println!("{}:{}", key, val);
+    }
     println!(
         "{:?}",
         std::process::Command::new("sh")
