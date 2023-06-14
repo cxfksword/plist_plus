@@ -125,14 +125,12 @@ fn repo_setup(url: &str) {
             .output()
             .unwrap()
     );
-    let status = std::process::Command::new("sh")
+    let out = std::process::Command::new("sh")
         .arg("-c")
         .arg("./autogen.sh")
-        .status()
-        .expect("failed to run autogen.sh");
-    if !status.success() {
-        panic!("failed to run autogen.sh");
-    }
+        .output()
+        .unwrap();
+    println!("{:?}", out);
     env::remove_var("NOCONFIGURE");
     env::set_current_dir("..").unwrap();
 }
